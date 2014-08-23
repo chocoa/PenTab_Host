@@ -32,7 +32,6 @@ public class PentabHost extends JFrame {
 	private int mOldY;
 	private boolean isLooper;
 	private LinkedBlockingQueue<String> mReceiveQueue;
-	private boolean isFirstDraw;
 
 	public static void main(String[] args) {
 
@@ -70,14 +69,12 @@ public class PentabHost extends JFrame {
 			public void onConectSocket(Socket socket) {
 				mReceiveQueue = new LinkedBlockingQueue<String>();
 
-				new RemoteListener(socket) {
+				new ReceivedDataListener(socket) {
 
 					@Override
 					protected void onReceivedData(String deta) {
 						if(deta != null) {
-
-							if(!isFirstDraw)
-								isFirstDraw = true;
+							
 							mReceiveQueue.offer(deta);
 
 							if(!isLooper)
@@ -90,13 +87,6 @@ public class PentabHost extends JFrame {
 		};
 
 	}
-
-	public void paint(Graphics g){
-
-		if(isFirstDraw)
-			mG2.draw(new Line2D.Double(mOldX, mOldY, mNowX, mNowY));
-
-    }
 
 	private void drawLooper() {
 		isLooper = true;
@@ -116,12 +106,12 @@ public class PentabHost extends JFrame {
 					mNowX = (int)(Integer.parseInt(drawDeta[1]) * ZOOM);
 					mNowY = (int)(Integer.parseInt(drawDeta[2]) * ZOOM);
 				}
-				repaint();
+				mG2.draw(new Line2D.Double(mOldX, mOldY, mNowX, mNowY));
 			}
 			isLooper = false;
 
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
+			e.printStackTrace(); 
 
 		} catch (InterruptedException e) {
 			e.printStackTrace();
