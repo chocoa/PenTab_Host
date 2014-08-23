@@ -52,6 +52,7 @@ public class PentabHost extends JFrame {
 		mG2 = (Graphics2D)getGraphics();
 		mG2.setStroke(new BasicStroke(1.0f));
 		//mG2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);	//AA
+
 		mG2.setColor(Color.RED);
 	}
 
@@ -95,17 +96,18 @@ public class PentabHost extends JFrame {
 	// 描画
 	public void draw(){
 		//mG2.draw(new Line2D.Double(mOldX, mOldY, mNowX, mNowY));
-		
+
 		Vector2D[] vs = getStrokePoints(mOldX,mOldY,mOldP,mNowX,mNowY,mNowP);
 		int xPoints[] = {(int)vs[0].x, (int)vs[1].x, (int)vs[2].x, (int)vs[3].x};
 		int yPoints[] = {(int)vs[0].y, (int)vs[1].y, (int)vs[2].y, (int)vs[3].y};
-		mG2.drawPolygon(xPoints, yPoints, 4);
-		
+		mG2.fillPolygon(xPoints, yPoints, 4);
+		int P2 = mNowP*2;
+		mG2.fillOval(mNowX-mNowP, mNowY-mNowP, P2, P2);
+
     }
 
 	private void drawLooper() {
 		isLooper = true;
-		System.out.println(mReceiveQueue.size());
 		String deta;
 		try {
 			// キューから全てデータを取り出し、描画
@@ -140,9 +142,9 @@ public class PentabHost extends JFrame {
 		}
 
 	}
-	
-	
-	
+
+
+
 	// 開始点と終了点の筆厚から描画ストローク４点を計算
 	private Vector2D[] getStrokePoints(float sx, float sy, float sp, float ex, float ey, float ep) {
 		Vector2D vAngle = new Vector2D(ex-sx, ey-sy);
@@ -155,7 +157,7 @@ public class PentabHost extends JFrame {
 		ret[3] = new Vector2D(ex+vNP.x*ep, ey+vNP.y*ep);
 		return ret;
 	}
-	
+
 	// ウィンドウの状態をイベントリスナーで取得できるようにするクラス
 	class PentabWindowListener extends WindowAdapter {
 		// JFrame.EXIT_ON_CLOSE リスナー
