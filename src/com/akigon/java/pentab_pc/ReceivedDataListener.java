@@ -14,7 +14,6 @@ public abstract class ReceivedDataListener {
 
 	public ReceivedDataListener(Socket socket) {
 		mSocket = socket;
-
 	}
 
 	public void start() {
@@ -24,9 +23,11 @@ public abstract class ReceivedDataListener {
 			public void run() {
 
 				try {
+					// 入力ソケットの準備
 					InputStream in = mSocket.getInputStream();
 					BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
+					// ソケットからのデータを取得
 					while(true) {
 						deta = br.readLine();
 						onReceivedData(deta);
